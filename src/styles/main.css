@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-hero {
+  background-image: url("../assets/img/hero_bg.jpeg");
+  background-size: cover;
+  position: relative;
+  background-repeat: no-repeat;
+  height: 400px;
+  background-position: 0% 33%;
+}
+
+@layer components {
+  .shadow-custom {
+    box-shadow: inset -1.5px -1.5px #515151;
+  }
+  .shadow-customActive {
+    box-shadow: inset 1.5px 1.5px #515151;
+  }
+}
+
+.border_green {
+  border: 10px solid #00bc77;
+}
+
+.border-footer {
+  border-top: 2px solid #ccc;
+}
