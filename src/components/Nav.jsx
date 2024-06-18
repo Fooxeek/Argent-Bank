@@ -1,10 +1,21 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import logo from "../assets/img/logo.png";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser, clearToken } from "../api/userSlice";
 
-export default function Nav({ currentUser }) {
+export default function Nav() {
+  const currentUser = useSelector((state) => state.user.user);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignOut = () => {
+    dispatch(clearUser());
+    dispatch(clearToken());
+    navigate("/sign-in");
+  };
 
   return (
     <nav className="flex items-center justify-between">
@@ -21,12 +32,12 @@ export default function Nav({ currentUser }) {
               <FaUserCircle className="mr-1" />
               <span>{currentUser.firstName}</span>
             </Link>
-            <Link
+            <button
               className="flex items-center font-bold hover:underline mr-1"
-              to="/"
+              onClick={handleSignOut}
             >
               Sign Out
-            </Link>
+            </button>
           </div>
         ) : (
           <Link

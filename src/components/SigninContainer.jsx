@@ -1,43 +1,33 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Pour rediriger après connexion réussie
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, setToken, setStatus, setError } from "../api/userSlice";
+import { loginUser, fetchUserProfile } from "../api/apiService";
 
 export default function SigninContainer() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { status, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(setStatus("loading"));
     try {
-      console.log("Submitting:", { email, password });
-      const response = await axios.post(
-        "http://localhost:3001/api/v1/user/login",
-        {
-          email,
-          password,
-        }
-      );
-
-      console.log("Response:", response.data);
-      const { token, user } = response.data.body;
-      console.log("Token:", token);
-      console.log("User:", user);
+      const { token } = await loginUser(email, password);
 
       if (token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        // Rediriger vers /user/profile avec les données utilisateur
+        dispatch(setToken(token));
+        const user = await fetchUserProfile(token);
+        dispatch(setUser(user));
+        dispatch(setStatus("succeeded"));
         navigate("/user/profile", { state: { user } });
       }
-    } catch (error) {
-      setError("Invalid email or password");
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
+    } catch (err) {
+      dispatch(setError("Invalid email or password"));
+      dispatch(setStatus("failed"));
     }
   };
 
@@ -48,7 +38,9 @@ export default function SigninContainer() {
           <FaUserCircle size={50} />
         </div>
         <h1 className="text-center text-2xl font-bold mb-6">Sign in</h1>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {status === "failed" && (
+          <p className="text-red-500 text-center">{error}</p>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col text-left mb-4">
             <label className="font-bold" htmlFor="email">
@@ -81,6 +73,7 @@ export default function SigninContainer() {
           <button
             type="submit"
             className="w-full bg-greenButton text-white py-2 underline"
+            disabled={status === "loading"}
           >
             Sign In
           </button>
