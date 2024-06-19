@@ -12,20 +12,25 @@ export default function SigninContainer() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Fonction appelée lors de la soumission du formulaire
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(setStatus("loading"));
+    e.preventDefault(); // Empêche le rechargement de la page
+    dispatch(setStatus("loading")); // Met à jour le statut à "loading"
     try {
+      // Appel de la fonction loginUser pour tenter de se connecter
       const { token } = await loginUser(email, password);
 
       if (token) {
-        dispatch(setToken(token));
+        dispatch(setToken(token)); // Stocke le token dans le store Redux
+        // Récupère le profil de l'utilisateur en utilisant le token
         const user = await fetchUserProfile(token);
-        dispatch(setUser(user));
-        dispatch(setStatus("succeeded"));
+        dispatch(setUser(user)); // Stocke les informations de l'utilisateur dans le store Redux
+        dispatch(setStatus("succeeded")); // Met à jour le statut à "succeeded"
+        // Redirige l'utilisateur vers la page de profil
         navigate("/user/profile", { state: { user } });
       }
     } catch (err) {
+      // En cas d'erreur, met à jour le statut et stocke le message d'erreur
       dispatch(setError("Invalid email or password"));
       dispatch(setStatus("failed"));
     }
