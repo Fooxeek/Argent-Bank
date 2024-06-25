@@ -1,19 +1,36 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { setUser } from "../api/userSlice";
+import { updateUserProfile } from "../api/apiService";
 
-export default function EditButton({ user, onSave }) {
+export default function EditButton({ user }) {
   const [isEditing, setIsEditing] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
+  const token = useSelector((state) => state.user.token);
+  const dispatch = useDispatch();
 
-  const handleSave = () => {
-    onSave({ firstName, lastName });
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const updatedUser = await updateUserProfile(token, {
+        firstName,
+        lastName,
+      });
+      dispatch(setUser(updatedUser));
+      setIsEditing(false);
+      toast.success("Profile edité avec succès");
+    } catch (error) {
+      toast.error("Echec de la mise à jour du profil");
+      console.error("Failed to update user profile:", error);
+    }
   };
 
   const handleCancel = () => {
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setIsEditing(false);
+    toast("Edition annulée");
   };
 
   if (isEditing) {

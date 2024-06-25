@@ -14,11 +14,15 @@ import Error404 from "./pages/Error404";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 
+// Component Toaster
+import { Toaster } from "react-hot-toast";
+
 function App() {
   return (
     <Router>
       <div className="App">
         <Header />
+        <Toaster position="top-center" />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />

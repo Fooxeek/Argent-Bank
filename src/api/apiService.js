@@ -6,7 +6,6 @@ const BASE_URL = "http://localhost:3001/api/v1/user";
 export const loginUser = async (email, password) => {
   // Envoi d'une requête POST à l'endpoint /login avec l'email et le mot de passe de l'utilisateur
   const response = await axios.post(`${BASE_URL}/login`, { email, password });
-  // Retourne la partie "body" des données de la réponse, qui contient le token et peut-être d'autres informations
   return response.data.body;
 };
 
@@ -22,5 +21,17 @@ export const fetchUserProfile = async (token) => {
       },
     }
   );
+  return response.data.body;
+};
+
+// Fonction asynchrone pour mettre à jour le profil de l'utilisateur
+export const updateUserProfile = async (token, user) => {
+  // Envoi d'une requête PUT à l'endpoint /profile avec les nouvelles données utilisateur
+  // Le token est inclus dans les en-têtes de la requête pour l'authentification
+  const response = await axios.put(`${BASE_URL}/profile`, user, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.body;
 };

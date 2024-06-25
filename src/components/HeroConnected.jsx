@@ -1,15 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../api/userSlice";
+import { useSelector } from "react-redux";
 import EditButton from "./EditButton";
 
 export default function HeroConnected() {
   const user = useSelector((state) => state.user.user);
-  const dispatch = useDispatch();
-
-  const handleSave = (updatedUser) => {
-    dispatch(setUser(updatedUser));
-  };
 
   return (
     <div className="font-semibold flex justify-center items-center flex-col">
@@ -19,7 +13,7 @@ export default function HeroConnected() {
           {user.firstName} {user.lastName}
         </h1>
         <div className="flex justify-center">
-          <EditButton user={user} onSave={handleSave} />
+          <EditButton user={user} />
         </div>
       </div>
     </div>

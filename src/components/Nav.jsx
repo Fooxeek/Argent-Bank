@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { FaUserCircle } from "react-icons/fa";
 import logo from "../assets/img/logo.png";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +16,7 @@ export default function Nav() {
     dispatch(clearUser());
     dispatch(clearToken());
     navigate("/sign-in");
+    toast.success("Deconnexion reussie !");
   };
 
   return (

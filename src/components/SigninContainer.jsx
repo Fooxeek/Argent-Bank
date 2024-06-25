@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { setUser, setToken, setStatus, setError } from "../api/userSlice";
 import { loginUser, fetchUserProfile } from "../api/apiService";
 
@@ -28,11 +29,14 @@ export default function SigninContainer() {
         dispatch(setStatus("succeeded")); // Met à jour le statut à "succeeded"
         // Redirige l'utilisateur vers la page de profil
         navigate("/user/profile", { state: { user } });
+        toast.success("Connexion réussie !");
       }
     } catch (err) {
       // En cas d'erreur, met à jour le statut et stocke le message d'erreur
       dispatch(setError("Invalid email or password"));
       dispatch(setStatus("failed"));
+      console.error("Failed to sign in:", err);
+      toast.error("Echec de la connexion");
     }
   };
 
