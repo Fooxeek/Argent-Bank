@@ -25,10 +25,10 @@ export default function Nav() {
         <img src={logo} alt="logo" className="w-[200px]" />
       </Link>
       <div>
-        {location.pathname.includes("/user/") && currentUser ? (
+        {location.pathname.includes("/user/profile") && currentUser ? (
           <div className="flex items-center">
             <Link
-              to={`/user/${currentUser.id}`}
+              to={`/user/profile`}
               className="flex items-center font-bold hover:underline mr-3"
             >
               <FaUserCircle className="mr-1" />
